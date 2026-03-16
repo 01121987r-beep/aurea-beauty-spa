@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aurea Beauty Spa</title>
+  <link rel="stylesheet" href="/client/styles.css">
+</head>
+<body>
+  <section id="intro-splash" class="intro-splash" aria-hidden="true">
+    <div class="intro-splash-inner">
+      <div class="intro-mark">
+        <img id="intro-logo" class="intro-logo" src="/client/assets/logo-spa.svg" alt="Logo Aurea Beauty Spa">
+      </div>
+      <p class="intro-kicker">Beauty spa booking</p>
+      <h1 id="intro-shop-name" class="intro-title">Aurea Beauty Spa</h1>
+      <p class="intro-copy">Rituali di bellezza, relax e cura su misura</p>
+    </div>
+  </section>
+
+  <main class="app-shell">
+    <header class="hero-card">
+      <div class="hero-brand">
+        <div>
+          <p class="eyebrow">Esperienza beauty premium</p>
+          <h1 id="shop-name">Aurea Beauty Spa</h1>
+          <p id="shop-tagline" class="hero-copy">Rituali di bellezza, relax e cura su misura</p>
+        </div>
+      </div>
+      <button id="my-bookings-trigger" class="ghost-btn hero-side-action" type="button">Le mie prenotazioni</button>
+    </header>
+
+    <section id="screen-home" class="screen-panel">
+      <div class="section-header">
+        <div>
+          <p class="section-kicker">Seleziona il tuo rituale</p>
+          <h2>I trattamenti in evidenza</h2>
+        </div>
+      </div>
+      <div id="services-grid" class="services-grid"></div>
+    </section>
+
+    <section id="screen-detail" class="screen-panel is-hidden">
+      <div class="section-header section-header-tight">
+        <button class="ghost-btn" data-screen-back="home" type="button">Indietro</button>
+      </div>
+      <article id="service-detail" class="detail-card"></article>
+    </section>
+
+    <section id="screen-specialist" class="screen-panel is-hidden">
+      <div class="section-header section-header-tight">
+        <button class="ghost-btn" data-screen-back="detail" type="button">Indietro</button>
+      </div>
+      <div class="section-header">
+        <div>
+          <h2>Scegli la specialista</h2>
+        </div>
+      </div>
+      <div id="specialists-grid" class="specialists-grid"></div>
+      <p id="specialists-status" class="state-copy"></p>
+    </section>
+
+    <section id="screen-schedule" class="screen-panel is-hidden">
+      <div class="section-header section-header-tight">
+        <button class="ghost-btn" data-screen-back="specialist" type="button">Indietro</button>
+      </div>
+      <div class="section-header">
+        <div>
+          <h2>Scegli giorno e orario</h2>
+        </div>
+      </div>
+      <div id="days-grid" class="days-grid"></div>
+      <div id="slots-block" class="slots-block is-hidden">
+        <p class="section-kicker soft-kicker">Orari disponibili</p>
+        <div id="slots-grid" class="slots-grid"></div>
+      </div>
+      <p id="schedule-status" class="state-copy"></p>
+    </section>
+
+    <section id="screen-form" class="screen-panel is-hidden">
+      <div class="section-header section-header-tight">
+        <button class="ghost-btn" data-screen-back="schedule" type="button">Indietro</button>
+      </div>
+      <div class="section-header">
+        <div>
+          <h2>Completa la prenotazione</h2>
+        </div>
+      </div>
+      <div id="selection-pill" class="selection-pill"></div>
+      <form id="booking-form" class="booking-form">
+        <label>
+          <span>Nome e cognome</span>
+          <input name="customer_name" type="text" required>
+        </label>
+        <label>
+          <span>Telefono</span>
+          <input name="customer_phone" type="tel" required>
+        </label>
+        <label>
+          <span>Nota o richiesta</span>
+          <textarea name="customer_note" rows="4" placeholder="Preferenze, esigenze particolari, ricorrenze..."></textarea>
+        </label>
+        <label class="consent-row">
+          <input name="privacy_consent" type="checkbox" required>
+          <span>Acconsento al trattamento dei dati per la gestione della prenotazione.</span>
+        </label>
+        <p id="form-status" class="state-copy"></p>
+        <button class="primary-btn" type="submit">Continua al riepilogo</button>
+      </form>
+    </section>
+
+    <section id="screen-summary" class="screen-panel is-hidden">
+      <div class="section-header section-header-tight">
+        <button class="ghost-btn" data-screen-back="form" type="button">Indietro</button>
+      </div>
+      <div class="section-header">
+        <div>
+          <p class="section-kicker">Riepilogo</p>
+          <h2>Conferma la tua prenotazione</h2>
+        </div>
+      </div>
+      <div id="summary-card" class="summary-card"></div>
+      <p id="summary-status" class="state-copy"></p>
+      <button id="confirm-booking" class="primary-btn" type="button">Conferma prenotazione</button>
+    </section>
+
+    <section id="screen-success" class="screen-panel success-panel is-hidden">
+      <p class="section-kicker">Prenotazione confermata</p>
+      <h2>Ti aspettiamo da Aurea Beauty Spa</h2>
+      <p class="success-copy">Il tuo rituale è stato registrato con successo. Trovi il riepilogo qui sotto e nell’area prenotazioni.</p>
+      <div id="success-card" class="summary-card"></div>
+      <div class="stack-actions">
+        <button id="success-home" class="primary-btn" type="button">Torna alla home</button>
+        <button id="success-bookings" class="ghost-btn" type="button">Le mie prenotazioni</button>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="app-footer">
+    <nav class="bottom-nav" aria-label="Azioni rapide">
+      <button id="footer-home" class="bottom-nav-item" type="button">
+        <span class="bottom-nav-icon">⌂</span>
+        <span class="bottom-nav-label">Home</span>
+      </button>
+      <button id="footer-specialists" class="bottom-nav-item" type="button">
+        <span class="bottom-nav-icon">◔</span>
+        <span class="bottom-nav-label">Specialiste</span>
+      </button>
+      <button id="footer-map-trigger" class="bottom-nav-item" type="button">
+        <span class="bottom-nav-icon">⌖</span>
+        <span class="bottom-nav-label">Mappa</span>
+      </button>
+      <a id="site-link" class="bottom-nav-item" href="https://01121987r-beep.github.io/centro-spa-premium/" target="_blank" rel="noreferrer">
+        <span class="bottom-nav-icon">◫</span>
+        <span class="bottom-nav-label">Sito</span>
+      </a>
+    </nav>
+  </footer>
+
+  <dialog id="bookings-dialog" class="modal">
+    <div class="modal-card">
+      <div class="section-header modal-head">
+        <div>
+          <p class="section-kicker">Area cliente</p>
+          <h2>Le mie prenotazioni</h2>
+        </div>
+        <button id="close-bookings" class="close-btn" type="button" aria-label="Chiudi">×</button>
+      </div>
+      <p id="bookings-status" class="state-copy"></p>
+      <div id="bookings-list" class="bookings-list"></div>
+    </div>
+  </dialog>
+
+  <dialog id="specialists-dialog" class="modal">
+    <div class="modal-card">
+      <div class="section-header modal-head">
+        <div>
+          <p class="section-kicker">Il team</p>
+          <h2>Le nostre specialiste</h2>
+        </div>
+        <button id="close-specialists" class="close-btn" type="button" aria-label="Chiudi">×</button>
+      </div>
+      <p id="specialists-directory-status" class="state-copy"></p>
+      <div id="specialists-directory-list" class="specialists-directory-list"></div>
+    </div>
+  </dialog>
+
+  <dialog id="map-dialog" class="modal">
+    <div class="modal-card map-modal-card">
+      <div class="section-header modal-head">
+        <div>
+          <p class="section-kicker">Dove siamo</p>
+          <h2>Mappa del salone</h2>
+        </div>
+        <button id="close-map" class="close-btn" type="button" aria-label="Chiudi">×</button>
+      </div>
+      <div class="map-embed-shell">
+        <iframe id="map-embed" class="map-embed" title="Mappa Aurea Beauty Spa" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+      <div class="map-address-card">
+        <strong id="map-address-text">Via delle Camelie 18, Verona</strong>
+        <span>Centro benessere demo - indirizzo di fantasia</span>
+      </div>
+    </div>
+  </dialog>
+
+  <script src="/runtime-config.js"></script>
+  <script src="/client/app.js" type="module"></script>
+</body>
+</html>

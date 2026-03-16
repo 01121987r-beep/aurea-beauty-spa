@@ -1,0 +1,8 @@
+{
+  "appId": "it.aurea.beautyspa",
+  "appName": "Aurea Beauty Spa",
+  "webDir": "public",
+  "server": {
+    "androidScheme": "https"
+  }
+}

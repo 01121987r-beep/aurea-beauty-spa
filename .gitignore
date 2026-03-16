@@ -1,0 +1,10 @@
+node_modules
+.DS_Store
+android/.gradle
+android/.idea
+android/local.properties
+android/build
+android/app/build
+beauty-spa.sqlite
+beauty-spa.sqlite-shm
+beauty-spa.sqlite-wal

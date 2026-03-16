@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Aurea Beauty Spa</string>
+    <string name="title_activity_main">Aurea Beauty Spa</string>
+    <string name="package_name">it.aurea.beautyspa</string>
+    <string name="custom_url_scheme">it.aurea.beautyspa</string>
+</resources>
