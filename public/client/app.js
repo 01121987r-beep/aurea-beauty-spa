@@ -71,9 +71,32 @@ const runtimeApiBase = `${window.APP_CONFIG?.API_BASE || ''}`.trim();
 const LOCAL_LOGO_SRC = '/client/assets/logo-spa.svg';
 let resolvedApiBase = '';
 let splashDismissed = false;
+let guardrailLogged = false;
 
 function isNativeLike() {
   return Boolean(window.Capacitor) || location.protocol === 'capacitor:' || location.protocol === 'file:';
+}
+
+function normalizeApiBase(base) {
+  return `${base || ''}`.trim().replace(/\/+$/, '');
+}
+
+function isLoopbackHost(hostname = '') {
+  return ['localhost', '127.0.0.1', '10.0.2.2'].includes(hostname);
+}
+
+function parseHostFromApiBase(base) {
+  try {
+    return new URL(base).hostname;
+  } catch {
+    return '';
+  }
+}
+
+function logApiGuardrail(mode, base) {
+  if (guardrailLogged) return;
+  guardrailLogged = true;
+  console.info('[Aurea Guardrail] API mode:', mode, '| base:', base || '(same-origin)');
 }
 
 async function resolveApiBase() {
@@ -82,7 +105,16 @@ async function resolveApiBase() {
   // In web/desktop deploy we explicitly configure API_BASE.
   // Trust it directly instead of blocking on /healthz probing.
   if (runtimeApiBase) {
-    resolvedApiBase = runtimeApiBase.replace(/\/+$/, '');
+    const normalized = normalizeApiBase(runtimeApiBase);
+    const host = parseHostFromApiBase(normalized);
+    const webAppRunningRemote = !isNativeLike() && !['localhost', '127.0.0.1'].includes(location.hostname);
+    if (webAppRunningRemote && isLoopbackHost(host)) {
+      throw new Error(
+        `Configurazione API_BASE non valida per web: ${normalized}. Usa l'URL Render pubblico del backend.`
+      );
+    }
+    resolvedApiBase = normalized;
+    logApiGuardrail('runtime-config', resolvedApiBase);
     return resolvedApiBase;
   }
 
@@ -94,7 +126,8 @@ async function resolveApiBase() {
     try {
       const response = await fetch(`${base}/healthz`);
       if (response.ok) {
-        resolvedApiBase = base;
+        resolvedApiBase = normalizeApiBase(base);
+        logApiGuardrail('autodiscovery', resolvedApiBase);
         return resolvedApiBase;
       }
     } catch {
@@ -107,10 +140,15 @@ async function resolveApiBase() {
 
 async function api(path, options = {}) {
   const base = await resolveApiBase();
-  const response = await fetch(`${base}${path}`, {
-    headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
-    ...options
-  });
+  let response;
+  try {
+    response = await fetch(`${base}${path}`, {
+      headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+      ...options
+    });
+  } catch (error) {
+    throw new Error(`Backend non raggiungibile (${base || 'same-origin'})`);
+  }
   const data = await response.json().catch(() => null);
   if (!data) throw new Error('Backend non raggiungibile o risposta non valida');
   if (!response.ok) throw new Error(data.error || 'Richiesta non riuscita');
