@@ -79,11 +79,16 @@ function isNativeLike() {
 async function resolveApiBase() {
   if (resolvedApiBase) return resolvedApiBase;
 
-  const candidates = runtimeApiBase
-    ? [runtimeApiBase]
-    : isNativeLike()
-      ? ['http://localhost:3200', 'http://10.0.2.2:3200', 'http://192.168.1.21:3200']
-      : [''];
+  // In web/desktop deploy we explicitly configure API_BASE.
+  // Trust it directly instead of blocking on /healthz probing.
+  if (runtimeApiBase) {
+    resolvedApiBase = runtimeApiBase.replace(/\/+$/, '');
+    return resolvedApiBase;
+  }
+
+  const candidates = isNativeLike()
+    ? ['http://localhost:3200', 'http://10.0.2.2:3200', 'http://192.168.1.21:3200']
+    : [''];
 
   for (const base of candidates) {
     try {
@@ -658,13 +663,14 @@ function renderSpecialistsDirectory() {
   `).join('');
 }
 
-async function ensureTeamSpecialists() {
-  if (state.teamSpecialists.length) return;
+async function ensureTeamSpecialists(forceRefresh = false) {
+  if (state.teamSpecialists.length && !forceRefresh) return;
   setStateCopy(refs.specialistsDirectoryStatus, 'Sto caricando il team...');
   try {
     const data = await api('/api/client/specialists');
     state.teamSpecialists = data.specialists || [];
   } catch {
+    if (state.teamSpecialists.length) return;
     const specialistMap = new Map();
     for (const service of state.services) {
       try {
@@ -742,7 +748,7 @@ async function openBookingsDialog() {
 
 async function openSpecialistsDialog() {
   try {
-    await ensureTeamSpecialists();
+    await ensureTeamSpecialists(true);
   } catch (error) {
     refs.specialistsDirectoryList.innerHTML = '';
     setStateCopy(refs.specialistsDirectoryStatus, error.message, 'error');
